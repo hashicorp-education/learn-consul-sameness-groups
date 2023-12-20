@@ -1,0 +1,53 @@
+global:
+  name: consul
+  datacenter: dc2
+  image: "hashicorp/consul:1.17.0"
+  peering:
+    enabled: true
+  tls:
+    enabled: true # mandatory for cluster peering
+    enableAutoEncrypt: true
+    verify: true
+  acls:
+    manageSystemACLs: true
+  metrics:
+    enabled: true
+    enableGatewayMetrics: true
+
+dns:
+  enabled: true
+  enableRedirection: true
+
+server:
+  enabled: true
+  replicas: 3
+  extraConfig: |
+    {
+      "log_level": "TRACE"
+    }
+
+connectInject:
+  transparentProxy:
+    defaultEnabled: true
+  enabled: true
+  default: true
+  metrics:
+    defaultEnabled: true # by default, this inherits from the value global.metrics.enabled
+    defaultEnableMerging: false
+
+meshGateway:
+  enabled: true # mandatory for k8s cluster peering
+  replicas: 1
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+    provider: "prometheus"
+    baseURL: http://prometheus-server #prometheus-server.consul.svc.cluster.local
+
+prometheus:
+  enabled: true

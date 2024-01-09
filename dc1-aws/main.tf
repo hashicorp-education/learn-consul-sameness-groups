@@ -5,7 +5,8 @@
 # You should **not** schedule deployments and services in this workspace. This keeps workspaces modular (one for provision EKS, another for scheduling Kubernetes resources) as per best practices.
 
 locals {
-  cluster_name = "lean-clusterpeer-${random_string.suffix.result}"
+  cluster_name = "learn-clusterpeer-${random_string.suffix.result}"
+  hvn_id     = "${var.hvn_id}-${random_string.suffix.result}"
 }
 
 resource "random_string" "suffix" {

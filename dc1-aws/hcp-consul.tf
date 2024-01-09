@@ -1,8 +1,3 @@
-locals {
-  cluster_id = "${var.cluster_id}-${random_string.cluster_id.id}"
-  hvn_id     = "${var.hvn_id}-${random_string.cluster_id.id}"
-}
-
 # The HVN created in HCP
 resource "hcp_hvn" "main" {
   hvn_id         = local.hvn_id
@@ -13,23 +8,17 @@ resource "hcp_hvn" "main" {
 
 module "aws_hcp_consul" {
   source  = "hashicorp/hcp-consul/aws"
-  version = "~> 0.13.0"
+  version = "~> 0.8.8"
 
   hvn                = hcp_hvn.main
   vpc_id             = module.vpc.vpc_id
   subnet_ids         = concat(module.vpc.public_subnets, module.vpc.database_subnets)
   route_table_ids    = concat(module.vpc.public_route_table_ids, module.vpc.database_route_table_ids)
-  security_group_ids = [aws_security_group.node_group_one.id]
-}
-
-resource "random_string" "cluster_id" {
-  length  = 6
-  special = false
-  upper   = false
+  security_group_ids = [module.eks.cluster_primary_security_group_id]
 }
 
 resource "hcp_consul_cluster" "main" {
-  cluster_id         = local.cluster_id
+  cluster_id         = random_string.suffix.result
   hvn_id             = hcp_hvn.main.hvn_id
   public_endpoint    = true
   tier               = var.consul_tier

@@ -1,4 +1,3 @@
-# General variables
 variable "region" {
   description = "AWS region"
   type        = string
@@ -13,28 +12,26 @@ variable "consul_chart_version" {
 
 variable "consul_version" {
   type        = string
-  description = "The Consul version to use"
+  description = "The HCP Consul version"
   default     = "1.17.0"
 }
 
-# HCP variables
 variable "cluster_id" {
   type        = string
   description = "The name of your HCP Consul cluster"
-  default     = "learn-consul-sameness"
+  default     = "learn-apigw"
 }
-
 
 variable "hvn_region" {
   type        = string
   description = "The HCP region to create resources in"
-  default     = "us-east-2"
+  default     = "us-west-2"
 }
 
 variable "hvn_id" {
   type        = string
   description = "The name of your HCP HVN"
-  default     = "learn-consul-sameness"
+  default     = "learn-hcp-sameness"
 }
 
 variable "hvn_cidr_block" {

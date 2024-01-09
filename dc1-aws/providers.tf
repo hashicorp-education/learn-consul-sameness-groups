@@ -4,6 +4,14 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.29.0"
     }
+    hcp = {
+      source  = "hashicorp/hcp"
+      version = "~> 0.79.0"
+    }
+    consul = {
+      source  = "hashicorp/consul"
+      version = "~> 2.20.0"
+    }
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = ">= 2.24.0"
@@ -22,7 +30,14 @@ terraform {
     }
   }
 
+  provider_meta "hcp" {
+    module_name = "hcp-consul"
+  }  
+
   required_version = ">= 1.2.0"
+}
+
+provider "hcp" {
 }
 
 provider "kubernetes" {
@@ -52,3 +67,7 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 
+provider "consul" {
+  address = hcp_consul_cluster.main.consul_public_endpoint_url
+  token   = hcp_consul_cluster_root_token.token.secret_id
+}

@@ -5,6 +5,23 @@ resource "kubernetes_namespace" "consul" {
   }
 }
 
+resource "kubernetes_secret" "consul_secrets" {
+  metadata {
+    name      = "${hcp_consul_cluster.main.datacenter}-hcp"
+    namespace = "consul"
+  }
+
+  data = {
+    caCert              = base64decode(hcp_consul_cluster.main.consul_ca_file)
+    gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
+    bootstrapToken      = hcp_consul_cluster_root_token.token.secret_id
+  }
+
+  type = "Opaque"
+
+  depends_on = [module.eks]
+}
+
 # Create Consul deployment
 resource "helm_release" "consul" {
   name       = "consul"
@@ -17,7 +34,10 @@ resource "helm_release" "consul" {
 
   values = [
     templatefile("${path.module}/../k8s-yamls/consul-helm-dc1.yaml",{
-      consul_version = var.consul_version
+      consul_version = var.consul_version,
+      consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
+      cluster_id       = hcp_consul_cluster.main.datacenter,
+      k8s_api_endpoint = module.eks.cluster_endpoint,
     })
   ]
 
@@ -29,13 +49,13 @@ resource "helm_release" "consul" {
 }
 
 ## Create API Gateway
-data "kubectl_filename_list" "api_gw_manifests" {
-  pattern = "${path.module}/api-gw/*.yaml"
+data "kubectl_path_documents" "api_gw_manifests" {
+  pattern = "${path.module}/../k8s-yamls/api-gateway*.yaml"
 }
 
 resource "kubectl_manifest" "api_gw" {
-  count     = length(data.kubectl_filename_list.api_gw_manifests.matches)
-  yaml_body = file(element(data.kubectl_filename_list.api_gw_manifests.matches, count.index))
+  for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
+  yaml_body  = each.value
   depends_on = [helm_release.consul]
 }
 

@@ -17,9 +17,10 @@ module "eks" {
     aws-ebs-csi-driver = { most_recent = true }
   }
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
-  cluster_endpoint_public_access = true
+  vpc_id                          = module.vpc.vpc_id
+  subnet_ids                      = module.vpc.private_subnets
+  cluster_endpoint_public_access  = true
+  cluster_endpoint_private_access = true
 
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
@@ -30,7 +31,7 @@ module "eks" {
     }
 
     # Disabling and using externally provided security groups
-    create_security_group = false
+    create_security_group                 = false
     attach_cluster_primary_security_group = true
   }
 
@@ -51,6 +52,34 @@ module "eks" {
       vpc_security_group_ids = [
         aws_security_group.node_group_one.id
       ]
+    }
+  }
+
+  node_security_group_additional_rules = {
+    ingress_self_all = {
+      description = "Node to node all ports/protocols"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
+      self        = true
+    }
+    ingress_cluster_all = {
+      description                   = "Cluster to node all ports/protocols"
+      protocol                      = "-1"
+      from_port                     = 0
+      to_port                       = 0
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+    egress_all = {
+      description      = "Node all egress"
+      protocol         = "-1"
+      from_port        = 0
+      to_port          = 0
+      type             = "egress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
     }
   }
 }

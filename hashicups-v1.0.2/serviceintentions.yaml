@@ -47,6 +47,28 @@ spec:
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
+  name: nginx
+spec:
+  sources:
+    - name: api-gateway
+      action: allow
+  destination:
+    name: nginx
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: products-api
+spec:
+  sources:
+    - name: public-api
+      action: allow
+  destination:
+    name: products-api
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
   name: deny-all
 spec:
   destination:

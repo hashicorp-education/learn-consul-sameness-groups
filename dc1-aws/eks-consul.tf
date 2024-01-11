@@ -33,8 +33,9 @@ resource "helm_release" "consul" {
   timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
 
   values = [
-    templatefile("${path.module}/../k8s-yamls/consul-helm-dc1.yaml",{
-      consul_version = var.consul_version,
+    templatefile("${path.module}/../k8s-yamls/consul-helm-dc1.yaml", {
+      datacenter       = hcp_consul_cluster.main.datacenter
+      consul_version   = var.consul_version,
       consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
       cluster_id       = hcp_consul_cluster.main.datacenter,
       k8s_api_endpoint = module.eks.cluster_endpoint,
@@ -42,10 +43,11 @@ resource "helm_release" "consul" {
   ]
 
   depends_on = [module.eks,
-                module.eks.eks_managed_node_groups,
-                kubernetes_namespace.consul,
-                module.vpc,
-                ]
+    module.eks.eks_managed_node_groups,
+    kubernetes_namespace.consul,
+    module.vpc,
+    kubernetes_secret.consul_secrets
+  ]
 }
 
 ## Create API Gateway
@@ -56,7 +58,7 @@ data "kubectl_path_documents" "api_gw_manifests" {
 resource "kubectl_manifest" "api_gw" {
   for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
   yaml_body  = each.value
-  depends_on = [helm_release.consul]
+  depends_on = [helm_release.consul, kubectl_manifest.hashicups]
 }
 
 locals {

@@ -1,5 +1,5 @@
 data "kubectl_path_documents" "hashicups_manifests" {
-  pattern = "${path.module}/../hashicups-v1.0.2/dc1/*.yaml"
+  pattern = "${path.module}/../hashicups-v1.0.2/*.yaml"
 }
 
 resource "kubectl_manifest" "hashicups" {

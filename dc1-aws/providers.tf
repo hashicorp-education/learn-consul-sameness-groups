@@ -28,11 +28,15 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.5.1"
     }
+    kustomization = {
+      source  = "kbst/kustomization"
+      version = "0.7.2"
+    }
   }
 
   provider_meta "hcp" {
     module_name = "hcp-consul"
-  }  
+  }
 
   required_version = ">= 1.2.0"
 }
@@ -62,10 +66,17 @@ provider "kubectl" {
 }
 
 provider "aws" {
-  region = var.region
+  region = var.vpc_region
 }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
 
 provider "consul" {
   address = hcp_consul_cluster.main.consul_public_endpoint_url

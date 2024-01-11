@@ -1,21 +1,30 @@
-output "cluster_id" {
-  description = "EKS cluster ID"
-  value       = module.eks.cluster_id
+output "consul_addr" {
+  value = hcp_consul_cluster.main.consul_public_endpoint_url
 }
 
-output "region" {
-  description = "AWS region"
-  value       = var.region
-}
-
-output "cluster_name" {
-  description = "Kubernetes Cluster Name"
-  value       = local.cluster_name
+output "consul_datacenter" {
+  value = hcp_consul_cluster.main.datacenter
 }
 
 output "consul_token" {
   value     = hcp_consul_cluster_root_token.token.secret_id
   sensitive = true
+}
+
+output "cluster_name" {
+  value = local.cluster_name
+}
+
+output "kubernetes_cluster_endpoint" {
+  value = data.aws_eks_cluster.cluster.endpoint
+}
+
+output "region" {
+  value = var.vpc_region
+}
+
+output "kubernetes_cluster_id" {
+  value = local.name
 }
 
 output "vpc" {

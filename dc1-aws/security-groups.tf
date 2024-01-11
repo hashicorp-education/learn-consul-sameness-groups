@@ -29,13 +29,29 @@ resource "aws_security_group" "node_group_one" {
     ]
   }
 
-  egress {
-    from_port = 8300
-    to_port   = 8300
-    protocol  = "tcp"
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true
+  }
 
-    cidr_blocks = [
-      "0.0.0.0/0",
-    ]
+  ingress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = concat(
+      #module.vpc.private_subnets_cidr_blocks,
+      module.vpc.public_subnets_cidr_blocks,
+      [hcp_hvn.main.cidr_block]
+    )
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 }

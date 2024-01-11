@@ -1,15 +1,23 @@
 global:
+  enabled: true
   name: consul
-  datacenter: dc1
-  image: "hashicorp/consul:1.17.0"
+  datacenter: ${datacenter}
+  image: "hashicorp/consul-enterprise:1.17.1-ent"
   peering:
     enabled: true
   tls:
     enabled: true # mandatory for cluster peering
     enableAutoEncrypt: true
     verify: true
+    caCert:
+      secretName: ${cluster_id}-hcp
+      secretKey: caCert
   acls:
     manageSystemACLs: true
+    bootstrapToken:
+      secretName: ${cluster_id}-hcp
+      secretKey: bootstrapToken
+
   metrics:
     enabled: true
     enableGatewayMetrics: true
@@ -18,13 +26,15 @@ dns:
   enabled: true
   enableRedirection: true
 
-server:
+externalServers:
   enabled: true
-  replicas: 3
-  extraConfig: |
-    {
-      "log_level": "TRACE"
-    }
+  hosts: ["${consul_hosts}"]
+  httpsPort: 443
+  useSystemRoots: true
+  k8sAuthMethodHost: ${k8s_api_endpoint}:443
+
+server:
+  enabled: false
 
 connectInject:
   transparentProxy:
@@ -34,6 +44,12 @@ connectInject:
   metrics:
     defaultEnabled: true # by default, this inherits from the value global.metrics.enabled
     defaultEnableMerging: false
+  apiGateway:
+    managedGatewayClass:
+      serviceType: LoadBalancer
+  consulNode:
+    meta:
+      terraform-module: "hcp-eks-client"
 
 meshGateway:
   enabled: true # mandatory for k8s cluster peering

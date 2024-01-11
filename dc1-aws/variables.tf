@@ -1,25 +1,13 @@
-variable "region" {
-  description = "AWS region"
+variable "name" {
+  description = "Tutorial name"
   type        = string
-  default     = "us-east-2"
+  default     = "learn-consul"
 }
 
-variable "consul_chart_version" {
+variable "vpc_region" {
   type        = string
-  description = "The Consul Helm chart version to use"
-  default     = "1.3.0"
-}
-
-variable "consul_version" {
-  type        = string
-  description = "The HCP Consul version"
-  default     = "1.17.0"
-}
-
-variable "cluster_id" {
-  type        = string
-  description = "The name of your HCP Consul cluster"
-  default     = "learn-apigw"
+  description = "The AWS region to create resources in"
+  default     = "us-west-2"
 }
 
 variable "hvn_region" {
@@ -31,7 +19,7 @@ variable "hvn_region" {
 variable "hvn_id" {
   type        = string
   description = "The name of your HCP HVN"
-  default     = "learn-hcp-sameness"
+  default     = "learn-consul-sameness"
 }
 
 variable "hvn_cidr_block" {
@@ -44,4 +32,16 @@ variable "consul_tier" {
   type        = string
   description = "The HCP Consul tier to use when creating a Consul cluster"
   default     = "development"
+}
+
+variable "consul_version" {
+  type        = string
+  description = "The HCP Consul version"
+  default     = "v1.17.0"
+}
+
+variable "consul_chart_version" {
+  type = string
+  description = "The Consul Helm chart version"
+  default = "1.3.0"
 }

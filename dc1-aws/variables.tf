@@ -1,9 +1,3 @@
-variable "name" {
-  description = "Tutorial name"
-  type        = string
-  default     = "learn-consul"
-}
-
 variable "vpc_region" {
   type        = string
   description = "The AWS region to create resources in"
@@ -19,7 +13,7 @@ variable "hvn_region" {
 variable "hvn_id" {
   type        = string
   description = "The name of your HCP HVN"
-  default     = "learn-consul-sameness"
+  default     = "learn-consul"
 }
 
 variable "hvn_cidr_block" {

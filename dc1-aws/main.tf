@@ -1,6 +1,5 @@
 locals {
-  cluster_name = "${var.name}-${random_string.suffix.result}"
-  name         = "${var.name}-${random_string.suffix.result}"
+  cluster_name = "demodatacenter1"
   hvn_id       = "${var.hvn_id}-${random_string.suffix.result}"
 }
 

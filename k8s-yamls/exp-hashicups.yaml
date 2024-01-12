@@ -1,0 +1,18 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+Kind: ExportedServices
+metadata:
+  name: exportedservices-hashicups
+spec:
+  services:
+    - name: frontend
+      namespace: default
+      consumers:
+        - samenessGroup: sameness-group-hashicups
+    - name: public-api
+      namespace: default
+      consumers:
+        - samenessGroup: sameness-group-hashicups
+    - name: products-api
+      namespace: default
+      consumers:
+        - samenessGroup: sameness-group-hashicups

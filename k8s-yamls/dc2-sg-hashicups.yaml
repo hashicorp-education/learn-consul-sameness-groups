@@ -1,0 +1,10 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: SamenessGroup 
+metadata:
+  name: sameness-group-hashicups
+spec:
+  defaultForFailover: true
+  members:                                   
+    #- partition: partition-1
+    #- partition: partition-2
+    - peer: demodatacenter1-default

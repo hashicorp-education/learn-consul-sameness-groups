@@ -31,3 +31,4 @@ override.tf.json
 # repository-related files
 kubeconfig_*
 *_config
+hcp-values.yaml

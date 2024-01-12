@@ -1,7 +1,7 @@
 global:
   name: consul
-  datacenter: dc2
-  image: "hashicorp/consul:1.17.0"
+  datacenter: demodatacenter2
+  image: "hashicorp/consul:${consul_version}"
   peering:
     enabled: true
   tls:
@@ -13,6 +13,19 @@ global:
   metrics:
     enabled: true
     enableGatewayMetrics: true
+    enableTelemetryCollector: true
+  # cloud:
+  #   enabled: true
+  #   resourceId:
+  #     secretName: consul-hcp-resource-id
+  #     secretKey: resource-id
+  #   clientId:
+  #     secretName: consul-hcp-client-id
+  #     secretKey: client-id
+  #   clientSecret:
+  #     secretName: consul-hcp-client-secret
+  #     secretKey: client-secret
+
 
 dns:
   enabled: true
@@ -51,3 +64,13 @@ ui:
 
 prometheus:
   enabled: true
+
+telemetryCollector:
+  enabled: true
+  # cloud:
+  #   clientId:
+  #     secretKey: client-id
+  #     secretName: consul-hcp-observability-client-id
+  #   clientSecret:
+  #     secretKey: client-secret
+  #     secretName: consul-hcp-observability-client-secret

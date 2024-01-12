@@ -18,5 +18,5 @@ variable "consul_chart_version" {
 variable "consul_version" {
   type        = string
   description = "The Consul version to use"
-  default     = "1.17.0"
+  default     = "1.17.1"
 }

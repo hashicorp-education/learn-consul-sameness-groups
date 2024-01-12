@@ -8,11 +8,15 @@ resource "google_project_service" "svc" {
   ])
 }
 
-resource "google_container_cluster" "dc1" {
-  name = "dc1"
+resource "google_container_cluster" "dc2" {
+  name = "dc2"
   location = var.zone
   initial_node_count = 3
   deletion_protection = false
+  
+  node_config {
+    machine_type = "e2-standard-2"
+  }
 
   depends_on = [
     google_project_service.svc["container"]
@@ -21,20 +25,20 @@ resource "google_container_cluster" "dc1" {
 
 data "google_client_config" "provider" {}
 
-data "google_container_cluster" "dc1" {
-  name     = "dc1"
+data "google_container_cluster" "dc2" {
+  name     = "dc2"
   location = var.zone
 
-  depends_on = [ google_container_cluster.dc1 ]
+  depends_on = [ google_container_cluster.dc2 ]
 }
 
 module "gke_auth" {
   source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
 
   project_id           = var.project
-  cluster_name         = "dc1"
+  cluster_name         = "dc2"
   location             = var.zone
   use_private_endpoint = true
 
-  depends_on = [ google_container_cluster.dc1 ]
+  depends_on = [ google_container_cluster.dc2 ]
 }

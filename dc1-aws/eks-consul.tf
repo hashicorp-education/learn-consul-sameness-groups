@@ -33,7 +33,7 @@ locals {
       hosts: ["${trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://")}"]
       httpsPort: 443
       useSystemRoots: true
-      k8sAuthMethodHost: ${module.eks.cluster_endpoint}:443
+      k8sAuthMethodHost: '${module.eks.cluster_endpoint}:443'
 
     server:
       enabled: false

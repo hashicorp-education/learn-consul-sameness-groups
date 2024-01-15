@@ -5,6 +5,5 @@ metadata:
 spec:
   defaultForFailover: true
   members:                                   
-    #- partition: partition-1
-    #- partition: partition-2
+    - partition: default
     - peer: demodatacenter1-default

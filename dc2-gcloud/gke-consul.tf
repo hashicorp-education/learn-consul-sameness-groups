@@ -19,18 +19,6 @@ global:
   enterpriseLicense:
     secretName: consul-license
     secretKey: key
-  # cloud:
-  #   enabled: true
-  #   resourceId:
-  #     secretName: consul-hcp-resource-id
-  #     secretKey: resource-id
-  #   clientId:
-  #     secretName: consul-hcp-client-id
-  #     secretKey: client-id
-  #   clientSecret:
-  #     secretName: consul-hcp-client-secret
-  #     secretKey: client-secret
-
 
 dns:
   enabled: true
@@ -72,15 +60,7 @@ prometheus:
 
 telemetryCollector:
   enabled: true
-  # cloud:
-  #   clientId:
-  #     secretKey: client-id
-  #     secretName: consul-hcp-observability-client-id
-  #   clientSecret:
-  #     secretKey: client-secret
-  #     secretName: consul-hcp-observability-client-secret
-
-  EOT
+EOT
 }
 
 resource "local_file" "helm_chart_consul" {

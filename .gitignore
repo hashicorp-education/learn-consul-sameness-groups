@@ -32,3 +32,5 @@ override.tf.json
 kubeconfig_*
 *_config
 hcp-values.yaml
+consul.hclic
+k8s-yamls/consul-helm-dc*.yaml

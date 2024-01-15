@@ -9,7 +9,6 @@ spec:
   sources:
   - name: nginx
     action: allow
-    namespace: default
     samenessGroup: product-group
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
@@ -22,7 +21,6 @@ spec:
   sources:
   - name: nginx
     action: allow
-    namespace: default
     samenessGroup: product-group
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
@@ -35,5 +33,4 @@ spec:
   sources:
   - name: public-api
     action: allow
-    namespace: default
     samenessGroup: product-group

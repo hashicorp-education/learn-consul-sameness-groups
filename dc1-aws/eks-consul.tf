@@ -1,28 +1,3 @@
-# Create consul namespace
-resource "kubernetes_namespace" "consul" {
-  metadata {
-    name = "consul"
-  }
-}
-
-resource "kubernetes_secret" "consul_secrets" {
-  metadata {
-    name      = "${hcp_consul_cluster.main.datacenter}-hcp"
-    namespace = "consul"
-  }
-
-  data = {
-    caCert              = base64decode(hcp_consul_cluster.main.consul_ca_file)
-    gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
-    bootstrapToken      = hcp_consul_cluster_root_token.token.secret_id
-  }
-
-  type = "Opaque"
-
-  #depends_on = [kubernetes_namespace.consul]
-}
-
-
 locals {
   helm_chart_consul = <<-EOT
     global:
@@ -37,12 +12,12 @@ locals {
         enableAutoEncrypt: true
         verify: true
         caCert:
-          secretName: ${hcp_consul_cluster.main.datacenter}-hcp
+          secretName: ${hcp_consul_cluster.main.datacenter}
           secretKey: caCert
       acls:
         manageSystemACLs: true
         bootstrapToken:
-          secretName: ${hcp_consul_cluster.main.datacenter}-hcp
+          secretName: ${hcp_consul_cluster.main.datacenter}
           secretKey: bootstrapToken
 
       metrics:
@@ -99,6 +74,6 @@ locals {
 }
 
 resource "local_file" "helm_chart_consul" {
-  filename = "${path.module}/k8s-yamls/consul-helm-dc1.yaml"
+  filename = "${path.module}/../k8s-yamls/consul-helm-dc1.yaml"
   content  = local.helm_chart_consul
 }

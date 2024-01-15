@@ -1,7 +1,3 @@
-output "consul_addr" {
-  value = hcp_consul_cluster.main.consul_public_endpoint_url
-}
-
 output "consul_datacenter" {
   value = hcp_consul_cluster.main.datacenter
 }

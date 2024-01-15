@@ -1,36 +1,89 @@
-# Create consul namespace
-resource "kubernetes_namespace" "consul" {
-  metadata {
-    name = "consul"
-  }
+locals {
+  helm_chart_consul = <<EOT
+global:
+  name: consul
+  datacenter: demodatacenter2
+  image: "hashicorp/consul-enterprise:${var.consul_version}"
+  peering:
+    enabled: true
+  tls:
+    enabled: true # mandatory for cluster peering
+    enableAutoEncrypt: true
+    verify: true
+  acls:
+    manageSystemACLs: true
+  metrics:
+    enabled: true
+    enableGatewayMetrics: true
+    enableTelemetryCollector: true
+  enterpriseLicense:
+    secretName: consul-license
+    secretKey: key
+  # cloud:
+  #   enabled: true
+  #   resourceId:
+  #     secretName: consul-hcp-resource-id
+  #     secretKey: resource-id
+  #   clientId:
+  #     secretName: consul-hcp-client-id
+  #     secretKey: client-id
+  #   clientSecret:
+  #     secretName: consul-hcp-client-secret
+  #     secretKey: client-secret
+
+
+dns:
+  enabled: true
+  enableRedirection: true
+
+server:
+  enabled: true
+  replicas: 3
+  extraConfig: |
+    {
+      "log_level": "TRACE"
+    }
+
+connectInject:
+  transparentProxy:
+    defaultEnabled: true
+  enabled: true
+  default: true
+  metrics:
+    defaultEnabled: true # by default, this inherits from the value global.metrics.enabled
+    defaultEnableMerging: false
+
+meshGateway:
+  enabled: true # mandatory for k8s cluster peering
+  replicas: 1
+
+ui:
+  enabled: true
+  service:
+    enabled: true
+    type: LoadBalancer
+  metrics:
+    enabled: true # by default, this inherits from the value global.metrics.enabled
+    provider: "prometheus"
+    baseURL: http://prometheus-server #prometheus-server.consul.svc.cluster.local
+
+prometheus:
+  enabled: true
+
+telemetryCollector:
+  enabled: true
+  # cloud:
+  #   clientId:
+  #     secretKey: client-id
+  #     secretName: consul-hcp-observability-client-id
+  #   clientSecret:
+  #     secretKey: client-secret
+  #     secretName: consul-hcp-observability-client-secret
+
+  EOT
 }
 
-# Create Consul deployment
-resource "helm_release" "consul" {
-  name       = "consul"
-  repository = "https://helm.releases.hashicorp.com"
-  version    = var.consul_chart_version
-  chart      = "consul"
-  namespace  = "consul"
-  wait       = true
-  timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
-
-  values = [
-    templatefile("${path.module}/../k8s-yamls/consul-helm-dc2.yaml",{
-      consul_version = var.consul_version
-    })
-  ]
-
-  depends_on = [ kubernetes_namespace.consul ]
-}
-
-## Create API Gateway
-data "kubectl_path_documents" "api_gw_manifests" {
-  pattern = "${path.module}/../k8s-yamls/api-gateway*.yaml"
-}
-
-resource "kubectl_manifest" "api_gw" {
-  for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
-  yaml_body  = each.value
-  depends_on = [helm_release.consul, kubectl_manifest.hashicups]
+resource "local_file" "helm_chart_consul" {
+  filename = "${path.module}/../k8s-yamls/consul-helm-dc2.yaml"
+  content  = local.helm_chart_consul
 }

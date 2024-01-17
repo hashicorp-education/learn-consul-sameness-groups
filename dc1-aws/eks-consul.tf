@@ -7,6 +7,7 @@ locals {
       image: "hashicorp/consul-enterprise:1.17.1-ent"
       peering:
         enabled: true
+      enableConsulNamespaces: true
       tls:
         enabled: true # mandatory for cluster peering
         enableAutoEncrypt: true

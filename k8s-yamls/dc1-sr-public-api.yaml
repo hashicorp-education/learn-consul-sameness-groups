@@ -1,0 +1,9 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceResolver
+metadata:
+  name: public-api
+spec:
+  connectTimeout: 1s
+  failover:
+    '*':
+      samenessGroup: sameness-group-hashicups

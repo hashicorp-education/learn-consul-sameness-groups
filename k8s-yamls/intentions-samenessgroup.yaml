@@ -3,11 +3,13 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
   name: frontend
+  namespace: default
 spec:
   destination:
     name: frontend
   sources:
   - name: nginx
+    namespace: default
     action: allow
     samenessGroup: product-group
   - name: nginx
@@ -17,26 +19,32 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
   name: public-api
+  namespace: default
 spec:
   destination:
     name: public-api
   sources:
   - name: nginx
+    namespace: default
     action: allow
     samenessGroup: product-group
   - name: nginx
+    namespace: default
     action: allow
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
   name: products-api
+  namespace: default
 spec:
   destination:
     name: products-api
   sources:
   - name: public-api
+    namespace: default
     action: allow
     samenessGroup: product-group
   - name: public-api
+    namespace: default
     action: allow

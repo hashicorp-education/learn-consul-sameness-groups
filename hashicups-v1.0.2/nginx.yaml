@@ -79,7 +79,7 @@ data:
         }
 
         location /api {
-          proxy_pass http://public-api:8080;
+          proxy_pass http://public-api.sameness-group-hashicups.sg:8080;
         }
       }
 ---

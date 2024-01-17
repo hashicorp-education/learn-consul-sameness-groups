@@ -6,6 +6,7 @@ global:
   image: "hashicorp/consul-enterprise:${var.consul_version}"
   peering:
     enabled: true
+  enableConsulNamespaces: true
   tls:
     enabled: true # mandatory for cluster peering
     enableAutoEncrypt: true

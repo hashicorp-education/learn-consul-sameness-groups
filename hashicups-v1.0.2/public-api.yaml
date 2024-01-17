@@ -48,7 +48,7 @@ spec:
       serviceAccountName: public-api
       containers:
         - name: public-api
-          image: hashicorpdemoapp/public-api:v0.0.6
+          image: hashikrastin/public-api:v0.0.9
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -59,6 +59,15 @@ spec:
               value: "http://products-api:9090"
             - name: PAYMENT_API_URI
               value: "http://payments:1800"
+            - name: ERROR_RATE
+              value: "0"
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 100m
+              memory: 100M
         - name: jaeger-agent
           image: jaegertracing/jaeger-agent:latest
           imagePullPolicy: IfNotPresent

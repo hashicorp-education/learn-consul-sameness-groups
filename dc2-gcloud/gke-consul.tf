@@ -16,7 +16,6 @@ global:
   metrics:
     enabled: true
     enableGatewayMetrics: true
-    enableTelemetryCollector: true
   enterpriseLicense:
     secretName: consul-license
     secretKey: key
@@ -59,8 +58,6 @@ ui:
 prometheus:
   enabled: true
 
-telemetryCollector:
-  enabled: true
 EOT
 }
 

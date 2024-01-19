@@ -2,35 +2,26 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: frontend
-  namespace: default
-spec:
-  destination:
-    name: frontend
-  sources:
-  - name: nginx
-    namespace: default
-    action: allow
-    samenessGroup: product-group
-  - name: nginx
-    action: allow
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
   name: public-api
   namespace: default
 spec:
-  destination:
-    name: public-api
   sources:
   - name: nginx
     namespace: default
+    samenessGroup: sameness-group-hashicups
     action: allow
-    samenessGroup: product-group
   - name: nginx
     namespace: default
     action: allow
+  - name: frontend
+    namespace: default
+    samenessGroup: sameness-group-hashicups
+    action: allow
+  - name: frontend
+    namespace: default
+    action: allow
+  destination:
+    name: public-api
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
@@ -38,13 +29,30 @@ metadata:
   name: products-api
   namespace: default
 spec:
-  destination:
-    name: products-api
   sources:
   - name: public-api
     namespace: default
+    samenessGroup: sameness-group-hashicups
     action: allow
-    samenessGroup: product-group
   - name: public-api
     namespace: default
     action: allow
+  destination:
+    name: products-api
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: counting
+  namespace: default
+spec:
+  sources:
+    - name: dashboard
+      namespace: default
+      action: allow
+    - name: dashboard
+      namespace: default
+      samenessGroup: sameness-group-hashicups
+      action: allow
+  destination:
+    name: counting

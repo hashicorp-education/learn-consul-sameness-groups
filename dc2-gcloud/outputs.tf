@@ -5,6 +5,14 @@ output "cluster-info" {
   }
 }
 
+output "project_id" {
+  value = var.project
+}
+
+output "zone" {
+  value = var.zone
+}
+
 output "set-project_command" {
   value = "gcloud config set project ${var.project}"
 }

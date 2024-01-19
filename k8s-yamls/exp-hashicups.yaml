@@ -4,12 +4,15 @@ metadata:
   name: default # partition containing services to export
 spec:
   services:
-    - name: frontend
-      consumers:
-        - samenessGroup: sameness-group-hashicups
     - name: public-api
+      namespace: default
       consumers:
         - samenessGroup: sameness-group-hashicups
     - name: products-api
+      namespace: default
+      consumers:
+        - samenessGroup: sameness-group-hashicups
+    - name: counting
+      namespace: default
       consumers:
         - samenessGroup: sameness-group-hashicups

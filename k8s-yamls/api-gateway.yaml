@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
-  name: api-gateway
+  name: consul-api-gateway
   namespace: consul
 spec:
   gatewayClassName: consul
@@ -25,12 +25,12 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: ReferenceGrant
 metadata:
   name: consul-reference-grant
-  namespace: default
+  namespace: default # service namespace
 spec:
   from:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      namespace: consul
+      namespace: consul # api-gw namespace
   to:
     - group: ""
       kind: Service
@@ -40,7 +40,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: consul-auth-binding
-  namespace: consul
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -54,7 +53,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: consul-api-gateway-tokenreview-binding
-  namespace: consul
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -80,7 +78,6 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: consul-api-gateway-auth-binding
-  namespace: consul
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -99,7 +96,8 @@ metadata:
 spec:
   # Defines the gateway listener.
   parentRefs:
-  - name: api-gateway
+  - name: consul-api-gateway
+    namespace: consul
   # Rules define behaviors for network traffic that goes through the route.
   rules:
   - matches:
@@ -112,3 +110,27 @@ spec:
       name: nginx
       namespace: default
       port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+# HTTPRoute routes HTTP requests to backend services.
+kind: HTTPRoute
+metadata:
+  name: route-hashicups-api
+  namespace: consul
+spec:
+  # Defines the gateway listener.
+  parentRefs:
+  - name: consul-api-gateway
+    namespace: consul
+  # Rules define behaviors for network traffic that goes through the route.
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api2
+    # Defines the backend service.
+    backendRefs:
+    - kind: Service
+      name: public-api
+      namespace: default
+      port: 8080

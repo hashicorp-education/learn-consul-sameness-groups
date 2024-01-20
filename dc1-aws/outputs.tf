@@ -32,7 +32,7 @@ output "next_steps" {
   value = <<-EOT
     aws eks --region $(terraform -chdir=dc1-aws output -raw region) update-kubeconfig --name $(terraform -chdir=dc1-aws output -raw cluster_name) --alias=dc1
     kubectl --context=dc1 create namespace consul
-    kubectl --contect=dc1 --namespace=consul create secret generic ${hcp_consul_cluster.main.datacenter} --from-literal="caCert=$(terraform -chdir=dc1-aws output -raw hcp_consul_ca) --from-literal="bootstrapToken=$(terraform -chdir=dc1-aws output -raw consul_token)"
+    kubectl --context=dc1 --namespace=consul create secret generic ${hcp_consul_cluster.main.datacenter} --from-literal="caCert=$(terraform -chdir=dc1-aws output -raw hcp_consul_ca)" --from-literal="bootstrapToken=$(terraform -chdir=dc1-aws output -raw consul_token)"
     consul-k8s install -context=dc1 -config-file=k8s-yamls/consul-helm-dc1.yaml
   EOT
 }

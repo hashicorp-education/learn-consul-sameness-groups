@@ -12,7 +12,4 @@ spec:
       namespace: default
       consumers:
         - samenessGroup: sameness-group-hashicups
-    - name: counting
-      namespace: default
-      consumers:
-        - samenessGroup: sameness-group-hashicups
+

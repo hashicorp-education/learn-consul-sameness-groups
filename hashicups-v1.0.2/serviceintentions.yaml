@@ -10,6 +10,9 @@ spec:
     - name: nginx
       namespace: default
       action: allow
+    - name: consul-api-gateway
+      namespace: consul
+      action: allow
   destination:
     name: public-api
 ---
@@ -43,14 +46,14 @@ spec:
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: postgres
+  name: products-api-db
 spec:
   sources:
-    - name: products-api
+    - name: product-api
       namespace: default
       action: allow
   destination:
-    name: postgres
+    name: product-api-db
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
@@ -67,14 +70,14 @@ spec:
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: products-api
+  name: product-api
 spec:
   sources:
     - name: public-api
       namespace: default
       action: allow
   destination:
-    name: products-api
+    name: product-api
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions

@@ -2,26 +2,32 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: products-api
+  name: product-api
+  namespace: default
+  labels:
+    app: product-api
 spec:
-  selector:
-    app: products-api
+  type: ClusterIP
   ports:
     - name: http
       protocol: TCP
       port: 9090
       targetPort: 9090
+  selector:
+    app: product-api
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: products-api
+  name: product-api
+  namespace: default
 automountServiceAccountToken: true
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
 metadata:
-  name: products-api
+  name: product-api
+  namespace: default
 spec:
   protocol: "http"
 ---
@@ -29,10 +35,11 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: db-configmap
+  namespace: default
 data:
   config: |
     {
-      "db_connection": "host=postgres port=5432 user=postgres password=password dbname=products sslmode=disable",
+      "db_connection": "host=product-api-db port=5432 user=postgres password=password dbname=products sslmode=disable",
       "bind_address": ":9090",
       "metrics_address": ":9103"
     }
@@ -40,24 +47,23 @@ data:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: products-api
+  name: product-api
+  namespace: default
   labels:
-    app: products-api
+    app: product-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: products-api
+      app: product-api
   template:
     metadata:
       labels:
-        app: products-api
+        app: product-api
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
         consul.hashicorp.com/connect-inject: "true"
     spec:
-      serviceAccountName: products-api
+      serviceAccountName: product-api
       volumes:
         - name: config
           configMap:
@@ -66,9 +72,9 @@ spec:
               - key: config
                 path: conf.json
       containers:
-        - name: products-api
-          image: hashicorpdemoapp/product-api:v0.0.21
-          imagePullPolicy: Always
+        - name: product-api
+          image: hashicorpdemoapp/product-api:v0.0.22
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090
             - containerPort: 9103
@@ -87,3 +93,10 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 100m
+              memory: 100M

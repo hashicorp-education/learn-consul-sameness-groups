@@ -3,25 +3,31 @@ apiVersion: v1
 kind: Service
 metadata:
   name: payments
-spec:
-  selector:
+  namespace: default
+  labels:
     app: payments
+spec:
+  type: ClusterIP
   ports:
     - name: http
       protocol: TCP
-      port: 1800
+      port: 8080
       targetPort: 8080
+  selector:
+    app: payments
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: payments
+  namespace: default
 automountServiceAccountToken: true
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
 metadata:
   name: payments
+  namespace: default
 spec:
   protocol: "http"
 ---
@@ -29,6 +35,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: payments
+  namespace: default
   labels:
     app: payments
 spec:
@@ -47,6 +54,13 @@ spec:
       containers:
         - name: payments
           image: hashicorpdemoapp/payments:v0.0.16
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512M
+            requests:
+              cpu: 500m
+              memory: 512M

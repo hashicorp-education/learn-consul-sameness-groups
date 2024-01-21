@@ -20,39 +20,8 @@ spec:
   - name: frontend
     namespace: default
     action: allow
+  - name: consul-api-gateway
+    namespace: consul
+    action: allow
   destination:
     name: public-api
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
-  name: products-api
-  namespace: default
-spec:
-  sources:
-  - name: public-api
-    namespace: default
-    samenessGroup: sameness-group-hashicups
-    action: allow
-  - name: public-api
-    namespace: default
-    action: allow
-  destination:
-    name: products-api
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
-  name: counting
-  namespace: default
-spec:
-  sources:
-    - name: dashboard
-      namespace: default
-      action: allow
-    - name: dashboard
-      namespace: default
-      samenessGroup: sameness-group-hashicups
-      action: allow
-  destination:
-    name: counting

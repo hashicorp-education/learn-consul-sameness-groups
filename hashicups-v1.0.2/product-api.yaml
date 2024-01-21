@@ -83,7 +83,7 @@ spec:
               value: "/config/conf.json"
           livenessProbe:
             httpGet:
-              path: /health
+              path: /health/livez
               port: 9090
             initialDelaySeconds: 15
             timeoutSeconds: 1
@@ -96,7 +96,7 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 100M
+              memory: 500M
             requests:
               cpu: 100m
-              memory: 100M
+              memory: 500M

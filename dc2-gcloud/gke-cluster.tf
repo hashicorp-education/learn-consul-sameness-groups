@@ -15,7 +15,7 @@ resource "google_container_cluster" "demodatacenter2" {
   deletion_protection = false
   
   node_config {
-    machine_type = "e2-standard-2"
+    machine_type = "e2-highcpu-4"
   }
 
   depends_on = [

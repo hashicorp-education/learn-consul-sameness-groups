@@ -13,15 +13,5 @@ spec:
   - name: nginx
     namespace: default
     action: allow
-  - name: frontend
-    namespace: default
-    samenessGroup: sameness-group-hashicups
-    action: allow
-  - name: frontend
-    namespace: default
-    action: allow
-  - name: consul-api-gateway
-    namespace: consul
-    action: allow
   destination:
     name: public-api

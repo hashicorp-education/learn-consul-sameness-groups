@@ -4,14 +4,8 @@ metadata:
   name: public-api
 spec:
   sources:
-    - name: frontend
-      namespace: default
-      action: allow
     - name: nginx
       namespace: default
-      action: allow
-    - name: consul-api-gateway
-      namespace: consul
       action: allow
   destination:
     name: public-api
@@ -34,9 +28,6 @@ metadata:
   name: frontend
 spec:
   sources:
-    - name: consul-api-gateway
-      namespace: consul
-      action: allow
     - name: nginx
       namespace: default
       action: allow

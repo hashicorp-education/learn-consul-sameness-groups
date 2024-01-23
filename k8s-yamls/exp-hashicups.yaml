@@ -8,8 +8,4 @@ spec:
       namespace: default
       consumers:
         - samenessGroup: sameness-group-hashicups
-    - name: products-api
-      namespace: default
-      consumers:
-        - samenessGroup: sameness-group-hashicups
 

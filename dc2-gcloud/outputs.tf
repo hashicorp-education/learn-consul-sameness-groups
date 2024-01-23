@@ -1,10 +1,3 @@
-output "cluster-info" {
-  value = {
-    project = var.project
-    zone = var.zone
-  }
-}
-
 output "project_id" {
   value = var.project
 }

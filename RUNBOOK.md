@@ -15,8 +15,8 @@ kubectl --context=dc1 apply -f k8s-yamls/api-gateway.yaml
 # prep DC2
 terraform -chdir=dc2-gcloud init
 terraform -chdir=dc2-gcloud apply
-gcloud config set project $(terraform -chdir=dc2-gcloud output -raw project)
-gcloud container clusters get-credentials --zone $(terraform -chdir=dc2-gcloud output -raw) demodatacenter2
+gcloud config set project $(terraform -chdir=dc2-gcloud output -raw project_id)
+gcloud container clusters get-credentials --zone $(terraform -chdir=dc2-gcloud output -raw zone) demodatacenter2
 kubectl config rename-context gke_$(terraform -chdir=dc2-gcloud output -raw project)_ $(terraform -chdir=dc2-gcloud output -raw zone)_demodatacenter2 dc2
 kubectl --context=dc2 create namespace consul
 kubectl --context=dc2 --namespace=consul create secret generic consul-license --from-file="key=consul.hclic"

@@ -7,5 +7,5 @@ spec:
     - name: public-api
       namespace: default
       consumers:
-        - samenessGroup: sameness-group-hashicups
+        - samenessGroup: hashicups
 

@@ -8,7 +8,7 @@ spec:
   sources:
   - name: nginx
     namespace: default
-    samenessGroup: sameness-group-hashicups
+    samenessGroup: hashicups
     action: allow
   - name: nginx
     namespace: default

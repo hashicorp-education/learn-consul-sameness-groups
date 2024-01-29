@@ -6,7 +6,7 @@ This is a companion repo to the [Connect Services in Different Consul Clusters w
 - Deploy HashiCups frontend in the first Kubernetes cluster
 - Deploy HashiCups backend in the second Kubernetes cluster
 - Configure Consul cluster peering between the two clusters
-- Export the HashiCups `products-api` service in the second datacenter 
+- Export the HashiCups `product-api` service in the second datacenter 
 - Connect the HashiCups frontend and backend via the cluster peering
 - Verify peered Consul services
 - Destroy environment

@@ -43,7 +43,7 @@ consul-k8s upgrade -context=dc2 -config-file <(consul-k8s config read -context=d
 kubectl --context=dc1 apply -f k8s-yamls/dc1-sg-hashicups.yaml
 kubectl --context=dc2 apply -f k8s-yamls/dc2-sg-hashicups.yaml
 
-# Export `public-api` and `products-api` from DC2 into DC1  
+# Export `public-api` and `product-api` from DC2 into DC1  
 kubectl --context=dc2 apply -f k8s-yamls/exp-hashicups.yaml
 
 # Apply intentions that allow cross-DC access via the SamenessGroup

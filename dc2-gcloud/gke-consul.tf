@@ -2,7 +2,7 @@ locals {
   helm_chart_consul = <<EOT
 global:
   name: consul
-  datacenter: demodatacenter2
+  datacenter: learn-consul-sameness-dc2
   image: "hashicorp/consul-enterprise:${var.consul_version}"
   peering:
     enabled: true

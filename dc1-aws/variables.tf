@@ -13,7 +13,7 @@ variable "hvn_region" {
 variable "hvn_id" {
   type        = string
   description = "The name of your HCP HVN"
-  default     = "learn-consul"
+  default     = "learn-consul-sameness"
 }
 
 variable "hvn_cidr_block" {

@@ -6,4 +6,4 @@ spec:
   defaultForFailover: true
   members:                                   
     - partition: default
-    - peer: demodatacenter2-default
+    - peer: learn-consul-sameness-dc2-default

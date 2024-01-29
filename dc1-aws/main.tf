@@ -1,5 +1,5 @@
 locals {
-  cluster_name = "demodatacenter1"
+  cluster_name = "learn-consul-sameness-dc1"
   hvn_id       = "${var.hvn_id}-${random_string.suffix.result}"
 }
 

@@ -8,8 +8,8 @@ resource "google_project_service" "svc" {
   ])
 }
 
-resource "google_container_cluster" "demodatacenter2" {
-  name = "demodatacenter2"
+resource "google_container_cluster" "learn-consul-sameness-dc2" {
+  name = "learn-consul-sameness-dc2"
   location = var.zone
   initial_node_count = 3
   deletion_protection = false
@@ -25,20 +25,20 @@ resource "google_container_cluster" "demodatacenter2" {
 
 data "google_client_config" "provider" {}
 
-data "google_container_cluster" "demodatacenter2" {
-  name     = "demodatacenter2"
+data "google_container_cluster" "learn-consul-sameness-dc2" {
+  name     = "learn-consul-sameness-dc2"
   location = var.zone
 
-  depends_on = [ google_container_cluster.demodatacenter2 ]
+  depends_on = [ google_container_cluster.learn-consul-sameness-dc2 ]
 }
 
 module "gke_auth" {
   source               = "terraform-google-modules/kubernetes-engine/google//modules/auth"
 
   project_id           = var.project
-  cluster_name         = "demodatacenter2"
+  cluster_name         = "learn-consul-sameness-dc2"
   location             = var.zone
   use_private_endpoint = true
 
-  depends_on = [ google_container_cluster.demodatacenter2 ]
+  depends_on = [ google_container_cluster.learn-consul-sameness-dc2 ]
 }

@@ -31,11 +31,5 @@ variable "consul_tier" {
 variable "consul_version" {
   type        = string
   description = "The HCP Consul version"
-  default     = "v1.17.0"
-}
-
-variable "consul_chart_version" {
-  type = string
-  description = "The Consul Helm chart version"
-  default = "1.3.0"
+  default     = "v1.17.3"
 }

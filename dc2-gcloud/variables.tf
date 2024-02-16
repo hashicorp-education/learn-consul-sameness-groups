@@ -12,5 +12,5 @@ variable "zone" {
 variable "consul_version" {
   type        = string
   description = "The Consul enterprise version to use"
-  default     = "1.17.1-ent"
+  default     = "1.17.3-ent"
 }

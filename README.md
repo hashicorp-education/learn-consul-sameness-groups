@@ -1,15 +1,6 @@
 # Learn Consul Cluster Peering
 
-This is a companion repo to the [Connect Services in Different Consul Clusters with Cluster Peering tutorial](https://developer.hashicorp.com/consul/tutorials/developer-mesh/cluster-peering-aws), containing sample configuration to:
-
-- Deploy two Kubernetes clusters with Consul
-- Deploy HashiCups frontend in the first Kubernetes cluster
-- Deploy HashiCups backend in the second Kubernetes cluster
-- Configure Consul cluster peering between the two clusters
-- Export the HashiCups `product-api` service in the second datacenter 
-- Connect the HashiCups frontend and backend via the cluster peering
-- Verify peered Consul services
-- Destroy environment
+This is a companion repo to the [Automate multi cloud service failover with Sameness groups tutorial](https://developer.hashicorp.com/consul/tutorials/developer-mesh/sameness-groups), containing sample configuration to:
 
 # Thanks
 

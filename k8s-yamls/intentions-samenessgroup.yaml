@@ -1,0 +1,17 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: public-api
+  namespace: default
+spec:
+  sources:
+  - name: nginx
+    namespace: default
+    samenessGroup: hashicups
+    action: allow
+  - name: nginx
+    namespace: default
+    action: allow
+  destination:
+    name: public-api

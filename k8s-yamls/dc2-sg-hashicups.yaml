@@ -1,0 +1,9 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: SamenessGroup 
+metadata:
+  name: hashicups
+spec:
+  defaultForFailover: true
+  members:                                   
+    - partition: default
+    - peer: learn-consul-sameness-dc1-default

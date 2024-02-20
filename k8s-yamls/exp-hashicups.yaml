@@ -1,0 +1,11 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ExportedServices
+metadata:
+  name: default # partition containing services to export
+spec:
+  services:
+    - name: public-api
+      namespace: default
+      consumers:
+        - samenessGroup: hashicups
+

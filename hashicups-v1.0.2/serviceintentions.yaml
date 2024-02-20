@@ -1,0 +1,82 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: public-api
+spec:
+  sources:
+    - name: nginx
+      namespace: default
+      action: allow
+  destination:
+    name: public-api
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: payments
+spec:
+  sources:
+    - name: public-api
+      namespace: default
+      action: allow
+  destination:
+    name: payments
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: frontend
+spec:
+  sources:
+    - name: nginx
+      namespace: default
+      action: allow
+  destination:
+    name: frontend
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: product-api-db
+spec:
+  sources:
+    - name: product-api
+      namespace: default
+      action: allow
+  destination:
+    name: product-api-db
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: nginx
+spec:
+  sources:
+    - name: consul-api-gateway
+      namespace: consul
+      action: allow
+  destination:
+    name: nginx
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: product-api
+spec:
+  sources:
+    - name: public-api
+      namespace: default
+      action: allow
+  destination:
+    name: product-api
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: deny-all
+spec:
+  destination:
+    name: '*'
+  sources:
+    - name: '*'
+      action: deny

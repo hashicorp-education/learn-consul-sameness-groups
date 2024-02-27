@@ -11,9 +11,6 @@ locals {
         enabled: true # mandatory for cluster peering
         enableAutoEncrypt: true
         verify: true
-        caCert:
-          secretName: ${hcp_consul_cluster.main.datacenter}
-          secretKey: caCert
       acls:
         manageSystemACLs: true
         bootstrapToken:
@@ -76,7 +73,7 @@ locals {
 # Create Kubernetes secrets for Consul components
 resource "kubernetes_secret" "consul_bootstrap_token" {
   metadata {
-    name = "bootstrap-token"
+    name      = "bootstrap-token"
     namespace = "consul"
   }
 
@@ -84,9 +81,10 @@ resource "kubernetes_secret" "consul_bootstrap_token" {
     token = hcp_consul_cluster_root_token.token.secret_id
   }
 
-  depends_on = [module.eks.eks_managed_node_groups, 
-                kubernetes_namespace.consul
-               ]
+  depends_on = [
+    module.eks.eks_managed_node_groups,
+    kubernetes_namespace.consul
+  ]
 
 }
 
@@ -113,11 +111,12 @@ resource "helm_release" "consul" {
     local.helm_chart_consul
   ]
 
-  depends_on = [module.eks,
-                module.eks.eks_managed_node_groups,
-                kubernetes_namespace.consul,
-                module.vpc,
-                ]
+  depends_on = [
+    module.eks,
+    module.eks.eks_managed_node_groups,
+    kubernetes_namespace.consul,
+    module.vpc,
+  ]
 }
 
 ## Create API Gateway

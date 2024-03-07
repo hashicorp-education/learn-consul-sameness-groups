@@ -16,7 +16,6 @@ locals {
         bootstrapToken:
           secretName: bootstrap-token
           secretKey: token
-
       metrics:
         enabled: true
         enableGatewayMetrics: true

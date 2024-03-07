@@ -33,3 +33,9 @@ variable "consul_version" {
   description = "The HCP Consul version"
   default     = "v1.17.3"
 }
+
+variable "helm_chart_version" {
+  type        = string
+  description = "The Helm Consul chart version"
+  default     = "1.3.3"
+}

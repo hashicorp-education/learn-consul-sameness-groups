@@ -61,7 +61,62 @@ prometheus:
 EOT
 }
 
-resource "local_file" "helm_chart_consul" {
-  filename = "${path.module}/../k8s-yamls/consul-helm-dc2.yaml"
-  content  = local.helm_chart_consul
+resource "kubernetes_namespace" "consul" {
+  metadata {
+    name = "consul"
+  }
+
+  depends_on = [ google_container_cluster.learn-consul-sameness-dc2 ]
+}
+
+# Create Kubernetes secrets for Consul components
+resource "kubernetes_secret" "consul_license" {
+  metadata {
+    name = "consul-license"
+    namespace = "consul"
+  }
+
+  data = {
+    key = file("${path.module}/../consul.hclic")
+  }
+
+  depends_on = [
+    google_container_cluster.learn-consul-sameness-dc2, 
+    kubernetes_namespace.consul,
+  ]
+
+}
+# Create Consul deployment
+resource "helm_release" "consul" {
+  name       = "consul"
+  repository = "https://helm.releases.hashicorp.com"
+  version    = var.helm_chart_version
+  chart      = "consul"
+  namespace  = "consul"
+  wait       = true
+  timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
+
+  values = [
+    local.helm_chart_consul,
+  ]
+
+  depends_on = [
+    kubernetes_namespace.consul,
+    kubernetes_secret.consul_license,
+    google_container_cluster.learn-consul-sameness-dc2,
+  ]
+}
+
+## Create API Gateway
+data "kubectl_path_documents" "api_gw_manifests" {
+  pattern = "${path.module}/../k8s-yamls/api-gateway*.yaml"
+}
+
+resource "kubectl_manifest" "api_gw" {
+  for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
+  yaml_body  = each.value
+  depends_on = [
+    helm_release.consul,
+    kubectl_manifest.hashicups,
+  ]
 }

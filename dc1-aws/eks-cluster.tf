@@ -10,11 +10,13 @@ data "aws_eks_cluster_auth" "cluster" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "19.21.0"
+  version = "20.8.5"
 
   cluster_name    = local.cluster_name
   cluster_version = "1.27"
 
+  enable_cluster_creator_admin_permissions = true
+  
   cluster_addons = {
     aws-ebs-csi-driver = { most_recent = true }
   }

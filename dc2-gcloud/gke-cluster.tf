@@ -1,4 +1,6 @@
 resource "google_project_service" "svc" {
+  project = var.project
+
   service = "${each.value}.googleapis.com"
 
   disable_dependent_services = true
@@ -10,6 +12,7 @@ resource "google_project_service" "svc" {
 
 resource "google_container_cluster" "learn-consul-sameness-dc2" {
   name = "learn-consul-sameness-dc2"
+  project = var.project
   location = var.zone
   initial_node_count = 3
   deletion_protection = false

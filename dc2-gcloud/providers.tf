@@ -10,7 +10,7 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.24.0"
+      version = ">= 2.29.0"
     }
     helm = {
       source  = "hashicorp/helm"
@@ -60,8 +60,3 @@ provider "kubectl" {
   )
   load_config_file = false
 }
-
-# provider "consul" {
-#   address = hcp_consul_cluster.main.consul_public_endpoint_url
-#   token   = hcp_consul_cluster_root_token.token.secret_id
-# }

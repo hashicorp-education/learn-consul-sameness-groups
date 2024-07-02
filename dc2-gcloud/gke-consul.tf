@@ -81,7 +81,7 @@ resource "kubernetes_secret" "consul_license" {
   }
 
   depends_on = [
-    google_container_cluster.learn-consul-sameness-dc2, 
+    #google_container_cluster.learn-consul-sameness-dc2, 
     kubernetes_namespace.consul,
   ]
 
@@ -93,8 +93,8 @@ resource "helm_release" "consul" {
   version    = var.helm_chart_version
   chart      = "consul"
   namespace  = "consul"
+  create_namespace = false
   wait       = true
-  timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
 
   values = [
     local.helm_chart_consul,

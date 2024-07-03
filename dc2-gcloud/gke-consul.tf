@@ -95,6 +95,7 @@ resource "helm_release" "consul" {
   namespace  = "consul"
   create_namespace = false
   wait       = true
+  timeout    = "300"
 
   values = [
     local.helm_chart_consul,
@@ -115,8 +116,6 @@ data "kubectl_path_documents" "api_gw_manifests" {
 resource "kubectl_manifest" "api_gw" {
   for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
   yaml_body  = each.value
-  depends_on = [
-    helm_release.consul,
-    kubectl_manifest.hashicups,
-  ]
+  wait = true
+  depends_on = [kubectl_manifest.hashicups]
 }

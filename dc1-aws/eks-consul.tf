@@ -81,7 +81,7 @@ resource "kubernetes_secret" "consul_bootstrap_token" {
   }
 
   depends_on = [
-    module.eks.eks_managed_node_groups,
+    #module.eks.eks_managed_node_groups,
     kubernetes_namespace.consul
   ]
 
@@ -93,7 +93,7 @@ resource "kubernetes_namespace" "consul" {
     name = "consul"
   }
 
-  depends_on = [ module.eks.eks_managed_node_groups ]
+  depends_on = [ module.eks ]
 }
 
 # Create Consul deployment
@@ -103,18 +103,21 @@ resource "helm_release" "consul" {
   version    = var.helm_chart_version
   chart      = "consul"
   namespace  = "consul"
+  create_namespace = false
   wait       = true
-  timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
+  wait_for_jobs = true
+  timeout    = "900"
 
   values = [
     local.helm_chart_consul
   ]
 
   depends_on = [
-    module.eks,
-    module.eks.eks_managed_node_groups,
+    #module.eks,
+    #module.eks.eks_managed_node_groups,
     kubernetes_namespace.consul,
-    module.vpc,
+    kubernetes_secret.consul_bootstrap_token
+    #module.vpc,
   ]
 }
 
@@ -126,7 +129,8 @@ data "kubectl_path_documents" "api_gw_manifests" {
 resource "kubectl_manifest" "api_gw" {
   for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
   yaml_body  = each.value
-  depends_on = [helm_release.consul, kubectl_manifest.hashicups]
+  wait = true
+  depends_on = [kubectl_manifest.hashicups]
 }
 
 locals {

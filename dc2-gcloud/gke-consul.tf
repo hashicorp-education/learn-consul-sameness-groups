@@ -81,7 +81,7 @@ resource "kubernetes_secret" "consul_license" {
   }
 
   depends_on = [
-    google_container_cluster.learn-consul-sameness-dc2, 
+    #google_container_cluster.learn-consul-sameness-dc2, 
     kubernetes_namespace.consul,
   ]
 
@@ -93,8 +93,9 @@ resource "helm_release" "consul" {
   version    = var.helm_chart_version
   chart      = "consul"
   namespace  = "consul"
+  create_namespace = false
   wait       = true
-  timeout    = 900 # 15mins timeout to avoid having to re-run `terraform destroy`
+  timeout    = "300"
 
   values = [
     local.helm_chart_consul,
@@ -115,8 +116,6 @@ data "kubectl_path_documents" "api_gw_manifests" {
 resource "kubectl_manifest" "api_gw" {
   for_each   = toset(data.kubectl_path_documents.api_gw_manifests.documents)
   yaml_body  = each.value
-  depends_on = [
-    helm_release.consul,
-    kubectl_manifest.hashicups,
-  ]
+  wait = true
+  depends_on = [kubectl_manifest.hashicups]
 }

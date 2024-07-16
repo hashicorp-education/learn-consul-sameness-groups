@@ -1,0 +1,5 @@
+dc1_address = "https://learn-consul-sameness-dc1.consul.aws.hashicorp.cloud"
+dc1_token = "00000000-00000000-00000000-00000000"
+dc2_address = "https://x.x.x.x"
+dc2_token = "00000000-00000000-00000000-00000000"
+dc2_certificateauthority = "[PEM encoded content]"
